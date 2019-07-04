@@ -2,12 +2,47 @@
 
 namespace Version;
 
+use DirectoryIterator;
+
 class Version
 {
-    public static function getVersion(): string
+    public static function getVersion(): ?string
     {
-        // Try to find a composer.json file in the current directory, then the parent, then the parent, etc until it is found
-        // parse the composer.json, and return the `version` key (i.e. `1.1.0`)
-        // If no composer.json is found, try the same for a package.json
+        $self = new self();
+        $dir = __DIR__;
+        $version = null;
+
+        if (!$version = $self->getJsonVersion($dir, 'composer.json')) {
+            $version = $self->getJsonVersion($dir, 'package.json');
+        }
+
+        return $version;
+    }
+
+    public function getJsonVersion($dir, $filename)
+    {
+        static $version = null;
+
+        if (!$dir instanceof DirectoryIterator) {
+            $dir = new DirectoryIterator((string) $dir);
+        }
+
+        foreach ($dir as $node) {
+            if (!$node->isDot() && $node->isFile() && $filename == strtolower($node->getFilename())) {
+                $arrayResult = json_decode(file_get_contents($node->getPathName()), true);
+                if (is_array($arrayResult) && array_key_exists('version', $arrayResult)) {
+                    $version = $arrayResult['version'];
+                }
+            }
+        }
+
+        if (empty($version)) {
+            $dir = dirname($node->getPath());
+            if (!empty($dir) && is_dir($dir) && !in_array($dir, ['\\', '/'])) {
+                $this->getJsonVersion($dir, $filename);
+            }
+        }
+
+        return $version;
     }
 }
