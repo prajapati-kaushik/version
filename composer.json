@@ -1,0 +1,30 @@
+{
+    "name": "linkorb/version",
+    "description": "ImgproxyService use imgproxy",
+    "homepage": "https://github.com/linkorb/version",
+    "keywords": [
+        "linkorb"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joost Faassen",
+            "email": "j.faassen@linkorb.com",
+            "role": "Development"
+        },
+        {
+            "name": "LinkORB",
+            "email": "engineering@linkorb.com",
+            "role": "Development"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Version\\": "src/"
+        }
+    }
+}
